@@ -1,0 +1,101 @@
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
+using System.IO;
+
+namespace MDProxyServer.Controllers;
+[ApiController]
+public class simpleSearchController : ControllerBase
+{
+    [HttpGet("/TopManga")]
+    public async Task<IActionResult> GetTopManga(string order = "latestUploadedChapter")
+    {
+        using(HttpClient client = new HttpClient())
+        {
+            
+            var endpoint = new Uri($"https://api.mangadex.org/manga/?includes[]=cover_art&limit=10&order[{order}]=desc");
+            var request = new HttpRequestMessage(HttpMethod.Get,endpoint);
+            request.Headers.Add("user-agent","mangaMagnetPersonalApp");
+            var response = await client.SendAsync(request);
+            var responseMsg = response.Content.ReadAsStringAsync().Result;
+            return Ok(responseMsg);
+        }
+    }
+    [HttpGet("/Manga")]
+    public async Task<IActionResult> getMangaInfo(string mangaId)
+    {
+        using(HttpClient client = new HttpClient())
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get,$"https://api.mangadex.org/manga/{mangaId}?includes[]=manga&includes[]=cover_art&includes[]=author&includes[]=artist&includes[]=tag&includes[]=creator");
+            request.Headers.Add("user-agent","mangaMagnetPersonalApp");
+            var response = await client.SendAsync(request);
+            var responseMsg = response.Content.ReadAsStringAsync().Result;
+            return Ok(responseMsg);
+        }
+    }
+    [HttpGet("/Authors")]
+    public async Task<IActionResult> getAuthorList(string authorName)
+    {
+        using(HttpClient client = new HttpClient())
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get,$"https://api.mangadex.org/author?name={authorName}");
+            request.Headers.Add("user-agent","mangaMagnetPersonalApp");
+            var response = await client.SendAsync(request);
+            var responseMsg = response.Content.ReadAsStringAsync().Result;
+            return Ok(responseMsg);
+        }
+    }
+    [HttpGet("/Authors/{authorId}")]
+    public async Task<IActionResult> getAuthor(string authorId)
+    {
+        using(HttpClient client = new HttpClient())
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get,$"https://api.mangadex.org/author/{authorId}");
+            request.Headers.Add("user-agent","mangaMagnetPersonalApp");
+            var response = await client.SendAsync(request);
+            var responseMsg = response.Content.ReadAsStringAsync().Result;
+            return Ok(responseMsg);
+
+        }
+    }
+    [HttpGet("/mangaCover")]
+    public async Task<IActionResult> getMangaCover(string mangaId="", string imageId = "")
+    {
+        //if(System.IO.File.Exists($"wwwroot/MangaCovers/{mangaId}{imageId}"))
+        //{
+        //    return Ok("Already Downloaded");
+        //}
+        //using(WebClient client = new WebClient())
+        //{
+        //    if(mangaId == "" | imageId == "")
+        //    {
+        //        return NotFound();
+         //   }
+           // var endpoint = new Uri($"https://uploads.mangadex.org/covers/{mangaId}/{imageId}");
+            //client.Headers["user-agent"] = "mangaMagnetPersonalApp";
+            //await client.DownloadFileTaskAsync(endpoint, $"wwwroot/MangaCovers/{mangaId}{imageId}");
+        //}
+        using(HttpClient client = new HttpClient())
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get,$"https://uploads.mangadex.org/covers/{mangaId}/{imageId}");
+            request.Headers.Add("user-agent","mangaMagnetPersonalApp");
+            var response = await client.SendAsync(request);
+            var responseMsg = response.Content.ReadAsStreamAsync().Result;
+
+
+            return Ok(responseMsg);
+        }
+    }
+    [HttpGet("/randomManga")]
+    public async Task<IActionResult> getRandomCover()
+    {
+        using(HttpClient client = new HttpClient())
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get,"https://api.mangadex.org/manga/random?includes[]=manga&includes[]=cover_art&includes[]=author&includes[]=artist&includes[]=tag&includes[]=creator");
+            request.Headers.Add("user-agent","mangaMagnetPersonalApp");
+            var response = await client.SendAsync(request);
+            var responseMsg = response.Content.ReadAsStringAsync().Result;
+            return Ok(responseMsg);
+        }
+
+    }
+}

@@ -1,0 +1,6 @@
+@MDProxyServer_HostAddress = http://localhost:5251
+
+GET {{MDProxyServer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

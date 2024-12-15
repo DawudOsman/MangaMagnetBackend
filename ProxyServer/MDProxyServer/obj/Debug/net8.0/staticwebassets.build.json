@@ -1,0 +1,19 @@
+{
+  "Version": 1,
+  "Hash": "pYwLQu+v3KPU9eFYPKAThZMTGKs/gRjKlFII8W1iYWM=",
+  "Source": "MDProxyServer",
+  "BasePath": "_content/MDProxyServer",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "MDProxyServer\\wwwroot",
+      "Source": "MDProxyServer",
+      "ContentRoot": "C:\\Users\\DOsma\\Documents\\2024 Coding Projects\\MangaProxyServer\\ProxyServer\\MDProxyServer\\wwwroot\\",
+      "BasePath": "_content/MDProxyServer",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": []
+}

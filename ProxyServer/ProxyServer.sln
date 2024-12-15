@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MDProxyServer", "MDProxyServer\MDProxyServer.csproj", "{3B58F306-02B1-4BF6-94FB-5CCF061C4343}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3B58F306-02B1-4BF6-94FB-5CCF061C4343}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B58F306-02B1-4BF6-94FB-5CCF061C4343}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B58F306-02B1-4BF6-94FB-5CCF061C4343}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B58F306-02B1-4BF6-94FB-5CCF061C4343}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0A3F3EE1-8EE6-4FFF-8A90-513F64204879}
+	EndGlobalSection
+EndGlobal
