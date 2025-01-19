@@ -1,15 +1,30 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
+using System.Net.Http;
+using System.Threading.RateLimiting;
+using System.Threading.Tasks;
 
 namespace MDProxyServer.Controllers;
 [ApiController]
 public class simpleSearchController : ControllerBase
 {
+    private readonly RateLimiter _ratelimiter;
+    public simpleSearchController( RateLimiter rateLimiter)
+    {
+        _ratelimiter = rateLimiter;
+    }
     [HttpGet("/TopManga")]
     public async Task<IActionResult> GetTopManga(string order = "latestUploadedChapter")
     {
-        using(HttpClient client = new HttpClient())
+        var permit = await _ratelimiter.AcquireAsync(1);
+        if(!permit.IsAcquired)
+        {
+            return StatusCode(429, "Rate limit exceeded. Please try again later.");
+        }
+        try
+        {
+                    using(HttpClient client = new HttpClient())
         {
             
             var endpoint = new Uri($"https://api.mangadex.org/manga/?includes[]=cover_art&limit=10&order[{order}]=desc");
@@ -19,11 +34,24 @@ public class simpleSearchController : ControllerBase
             var responseMsg = response.Content.ReadAsStringAsync().Result;
             return Ok(responseMsg);
         }
+        }
+        finally
+        {
+            permit.Dispose();
+        }
+
     }
     [HttpGet("/Manga")]
     public async Task<IActionResult> getMangaInfo(string mangaId)
     {
-        using(HttpClient client = new HttpClient())
+        var permit = await _ratelimiter.AcquireAsync(1);
+        if(!permit.IsAcquired)
+        {
+            return StatusCode(429, "Rate limit exceeded. Please try again later.");
+        }
+        try
+        {
+            using(HttpClient client = new HttpClient())
         {
             var request = new HttpRequestMessage(HttpMethod.Get,$"https://api.mangadex.org/manga/{mangaId}?includes[]=manga&includes[]=cover_art&includes[]=author&includes[]=artist&includes[]=tag&includes[]=creator");
             request.Headers.Add("user-agent","mangaMagnetPersonalApp");
@@ -31,11 +59,24 @@ public class simpleSearchController : ControllerBase
             var responseMsg = response.Content.ReadAsStringAsync().Result;
             return Ok(responseMsg);
         }
+        }
+        finally
+        {
+            permit.Dispose();
+        }
+
     }
     [HttpGet("/Authors")]
     public async Task<IActionResult> getAuthorList(string authorName)
     {
-        using(HttpClient client = new HttpClient())
+        var permit = await _ratelimiter.AcquireAsync(1);
+        if(!permit.IsAcquired)
+        {
+            return StatusCode(429, "Rate limit exceeded. Please try again later.");
+        }
+        try
+        {
+                    using(HttpClient client = new HttpClient())
         {
             var request = new HttpRequestMessage(HttpMethod.Get,$"https://api.mangadex.org/author?name={authorName}");
             request.Headers.Add("user-agent","mangaMagnetPersonalApp");
@@ -43,11 +84,23 @@ public class simpleSearchController : ControllerBase
             var responseMsg = response.Content.ReadAsStringAsync().Result;
             return Ok(responseMsg);
         }
+        }
+        finally
+        {
+            permit.Dispose();
+        }
+
     }
     [HttpGet("/Authors/{authorId}")]
     public async Task<IActionResult> getAuthor(string authorId)
     {
-        using(HttpClient client = new HttpClient())
+        var permit = await _ratelimiter.AcquireAsync(1);
+        if(!permit.IsAcquired)
+        {
+            return StatusCode(429, "Rate limit exceeded. Please try again later.");
+        }
+        try{
+                    using(HttpClient client = new HttpClient())
         {
             var request = new HttpRequestMessage(HttpMethod.Get,$"https://api.mangadex.org/author/{authorId}");
             request.Headers.Add("user-agent","mangaMagnetPersonalApp");
@@ -55,6 +108,11 @@ public class simpleSearchController : ControllerBase
             var responseMsg = response.Content.ReadAsStringAsync().Result;
             return Ok(responseMsg);
 
+        }
+        }
+        finally
+        {
+            permit.Dispose();
         }
     }
     [HttpGet("/mangaCover")]
@@ -74,7 +132,14 @@ public class simpleSearchController : ControllerBase
             //client.Headers["user-agent"] = "mangaMagnetPersonalApp";
             //await client.DownloadFileTaskAsync(endpoint, $"wwwroot/MangaCovers/{mangaId}{imageId}");
         //}
-        using(HttpClient client = new HttpClient())
+        var permit = await _ratelimiter.AcquireAsync(1);
+        if(!permit.IsAcquired)
+        {
+            return StatusCode(429, "Rate limit exceeded. Please try again later.");
+        }
+        try
+        {
+            using(HttpClient client = new HttpClient())
         {
             var request = new HttpRequestMessage(HttpMethod.Get,$"https://uploads.mangadex.org/covers/{mangaId}/{imageId}");
             request.Headers.Add("user-agent","mangaMagnetPersonalApp");
@@ -84,11 +149,23 @@ public class simpleSearchController : ControllerBase
 
             return Ok(responseMsg);
         }
+        }
+        finally
+        {
+            permit.Dispose();
+        }
     }
     [HttpGet("/randomManga")]
     public async Task<IActionResult> getRandomCover()
     {
-        using(HttpClient client = new HttpClient())
+        var permit = await _ratelimiter.AcquireAsync(1);
+        if(!permit.IsAcquired)
+        {
+            return StatusCode(429, "Rate limit exceeded. Please try again later.");
+        }
+        try
+        {
+             using(HttpClient client = new HttpClient())
         {
             var request = new HttpRequestMessage(HttpMethod.Get,"https://api.mangadex.org/manga/random?includes[]=manga&includes[]=cover_art&includes[]=author&includes[]=artist&includes[]=tag&includes[]=creator");
             request.Headers.Add("user-agent","mangaMagnetPersonalApp");
@@ -96,6 +173,40 @@ public class simpleSearchController : ControllerBase
             var responseMsg = response.Content.ReadAsStringAsync().Result;
             return Ok(responseMsg);
         }
+        }
+        finally
+        {
+            permit.Dispose();
+        }
 
     }
+    [HttpGet("/customSearch")]
+    public async Task<IActionResult> customSearch()
+    {
+        var permit = await _ratelimiter.AcquireAsync(1);
+        var queryString = Request.QueryString.Value;
+        var thirdPartyApiBaseUrl = "https://api.mangadex.org/manga";
+        var thirdPartyApiUrl = $"{thirdPartyApiBaseUrl}{queryString}";
+        if(!permit.IsAcquired)
+        {
+            return StatusCode(429, "Rate limit exceeded. Please try again later.");
+        }
+        try
+        {
+            using(HttpClient client = new HttpClient())
+        {
+            
+            var request = new HttpRequestMessage(HttpMethod.Get,thirdPartyApiUrl);
+            request.Headers.Add("user-agent","mangaMagnetPersonalApp");
+            var response = await client.SendAsync(request);
+            var responseMsg = response.Content.ReadAsStringAsync().Result;
+            return Ok(responseMsg);
+        }
+        }
+        finally
+        {
+            permit.Dispose();
+        }
+    }
+
 }

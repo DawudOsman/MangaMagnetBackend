@@ -64,3 +64,4 @@ C:\Users\DOsma\Documents\2024 Coding Projects\MangaProxyServer\ProxyServer\MDPro
 C:\Users\DOsma\Documents\2024 Coding Projects\MangaProxyServer\ProxyServer\MDProxyServer\obj\Debug\net8.0\MDProxyServer.pdb
 C:\Users\DOsma\Documents\2024 Coding Projects\MangaProxyServer\ProxyServer\MDProxyServer\obj\Debug\net8.0\MDProxyServer.genruntimeconfig.cache
 C:\Users\DOsma\Documents\2024 Coding Projects\MangaProxyServer\ProxyServer\MDProxyServer\obj\Debug\net8.0\ref\MDProxyServer.dll
+C:\Users\DOsma\Documents\2024 Coding Projects\MangaProxyServer\ProxyServer\MDProxyServer\obj\Debug\net8.0\MDProxyServer.sourcelink.json
