@@ -10,9 +10,11 @@ namespace MDProxyServer.Controllers;
 public class simpleSearchController : ControllerBase
 {
     private readonly RateLimiter _ratelimiter;
-    public simpleSearchController( RateLimiter rateLimiter)
+    private readonly RecommendationService _recommendationService;
+    public simpleSearchController( RateLimiter rateLimiter, RecommendationService recommendationService)
     {
         _ratelimiter = rateLimiter;
+        _recommendationService = recommendationService;
     }
     [HttpGet("/TopManga")]
     public async Task<IActionResult> GetTopManga(string order = "latestUploadedChapter")
@@ -207,6 +209,16 @@ public class simpleSearchController : ControllerBase
         {
             permit.Dispose();
         }
+    }
+    [HttpGet("{mangaId}")]
+    public IActionResult getRecommendations(string mangaId)
+    {
+        var recommendations = _recommendationService.GetRecommendations(mangaId);
+        if(recommendations == null)
+        {
+            return NotFound();
+        }
+        return Ok(recommendations);
     }
 
 }

@@ -2,11 +2,12 @@ using System.Threading.RateLimiting;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+var urlPath = "E:/mangaDB/manga_recommendations.csv";
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton(provider => new RecommendationService(urlPath));
 builder.Services.AddSingleton<RateLimiter>( _ => 
 {
     return new TokenBucketRateLimiter(new TokenBucketRateLimiterOptions{
