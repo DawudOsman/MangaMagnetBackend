@@ -2,7 +2,7 @@ using System.Threading.RateLimiting;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var urlPath = "E:/mangaDB/manga_recommendations.csv";
+var urlPath = @"../manga_recommendations.csv";
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
